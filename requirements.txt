@@ -1,0 +1,23 @@
+chasis
+-----------------------
+5 IR sensors
+two caster wheels
+acrylic mointing board
+two motors 
+a motor driver
+battery holder
+bms unit
+1 servo motor
+control unit - pcb
+communication 
+led signs
+2 ultra sonic sensors
+
+controller
+-----------------------
+screen
+power unit
+two joysticks
+7 buttons
+charging port
+custom ui for controlling the car
