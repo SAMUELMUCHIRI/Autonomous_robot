@@ -1,2 +1,2 @@
 # Mapping
-For alinefollowing robot containing abiity to identify path patterns and excecute tasks effectively
+For a linefollowing robot containing ability to identify path patterns and excecute tasks effectively
