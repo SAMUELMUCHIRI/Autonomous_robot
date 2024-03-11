@@ -23,6 +23,11 @@ const int motorPin4B = 31;
 const int enablePinDD = 2;  
 const int trigPin = 7;
 const int echoPin = 6;
+int backled1 = 51;
+int backled2 = 53;
+int rightled = 48;
+int leftled = 49;
+
 void setup() {
   myservo.attach(8);
 
@@ -40,6 +45,11 @@ void setup() {
   pinMode(enablePinDD, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(backled1, OUTPUT);
+  pinMode(backled2, OUTPUT);
+  pinMode(rightled, OUTPUT);
+  pinMode(leftled, OUTPUT);
+  
   
   // Initialize serial communication
   Serial.begin(9600);
@@ -47,28 +57,28 @@ void setup() {
 
 void loop() {
     // Send a 10 microsecond pulse to trigger the sensor
-  object_distance();
-  //scanarea();
-
-  
-  if (distance > 15)
-  {
-  motorForward(155 , 155);
+    int distance = object_distance();
+    if ( distance > 40)
+    {
+      
+  digitalWrite(rightled, HIGH);
+  digitalWrite(leftled, HIGH);
+   motorForward(155 , 155);
   delay(100);
-  } 
-  else if (distance < 15)
-  {
-  //motorStop();
-  scanarea();
-  delay(100);
+   digitalWrite(rightled, LOW);
+  digitalWrite(leftled, LOW);
+    }
+    else if(distance<41)
+    { 
+     scanarea();
+    }
 
-  //delay(200);
 
   
 
   }
 
-  }
+  
  
 
 
@@ -91,6 +101,7 @@ void motorForward(int right_speed , int left_speed)
 }
 
 void motorReverse(int speed) {
+  
    digitalWrite(motorPin1A, LOW);
   digitalWrite(motorPin2A, HIGH);
   analogWrite(enablePinAA, speed);
@@ -103,6 +114,7 @@ void motorReverse(int speed) {
   digitalWrite(motorPin3B, HIGH);
   digitalWrite(motorPin4B, LOW);
   analogWrite(enablePinDD, speed); 
+ 
   //Serial.println("Motor Reverse");
 }
 
@@ -122,13 +134,13 @@ void motorStop() {
  // Serial.println("Motor Stopped");
 }
 
-void motorspinright(int rturn) {
+void motorspinleft(int rturn) {
   digitalWrite(motorPin1A, LOW);
   digitalWrite(motorPin2A, HIGH);
-  analogWrite(enablePinAA, rturn);
+  analogWrite(enablePinAA, 80);
   digitalWrite(motorPin1B, LOW);
   digitalWrite(motorPin2B, HIGH);
-  analogWrite(enablePinBB, rturn);
+  analogWrite(enablePinBB, 80);
   digitalWrite(motorPin3A, LOW);
   digitalWrite(motorPin4A, HIGH);
   analogWrite(enablePinCC, rturn);
@@ -138,7 +150,7 @@ void motorspinright(int rturn) {
   //Serial.println("Motor Stopped");
 }
 
-void motorspinleft(int turn) {
+void motorspinright(int turn) {
    digitalWrite(motorPin1A, HIGH);
   digitalWrite(motorPin2A, LOW);
   analogWrite(enablePinAA, turn);
@@ -147,10 +159,10 @@ void motorspinleft(int turn) {
   analogWrite(enablePinBB, turn);
   digitalWrite(motorPin3A, HIGH);
   digitalWrite(motorPin4A, LOW);
-  analogWrite(enablePinCC, turn);
+  analogWrite(enablePinCC, 80);
   digitalWrite(motorPin3B, HIGH);
   digitalWrite(motorPin4B, LOW);
-  analogWrite(enablePinDD, turn);; 
+  analogWrite(enablePinDD, 80);; 
   //Serial.println("Motor Stopped");
 }
 
@@ -173,22 +185,23 @@ int object_distance()
 
 void scanarea()
 {
-   for (int i = 95; i < 170; i++) 
+  int center = object_distance();
+   for (int i = 90; i < 170; i++) 
   {
   myservo.write(i); 
   delay(1);                 
   }
    int right=object_distance();
-  delay(10);
+  delay(5);
   
-  for (int i = 169; i >21 ; i--) 
+  for (int i = 169; i >9 ; i--) 
   {
   myservo.write(i); 
   delay(1);                 
   }
-  delay(10);
+  delay(5);
   int left = object_distance();
-   for (int i = 20; i < 96 ; i++) 
+   for (int i = 10; i < 91 ; i++) 
   {
   myservo.write(i); 
   delay(1);                 
@@ -200,31 +213,102 @@ Serial.print(left);
 Serial.print("right :");
 Serial.print(right);
 
+if ((center<=5) && (center<=5) && (center<=5))
+{
+ escape_block();
+
+
+}
+else if (((center > left ) || (center == left )) && ((center > right ) || (center == right )))
+{
+  digitalWrite(rightled, HIGH);
+  digitalWrite(leftled, HIGH);
+  motorForward(155 , 155);
+  delay(100);
+  digitalWrite(rightled, LOW);
+  digitalWrite(leftled, LOW);
+}
+else if ( (right > center ) &&  (right > left ))
+{
+  digitalWrite(rightled, HIGH);
+  motorspinright(140);
+  delay(50);
+  digitalWrite(rightled, LOW);
+
+
+}
+  else if (( left > center  ) && (left > right ))
+{
+  digitalWrite(leftled, HIGH);
+  motorspinleft(140);
+  delay(50);
+  digitalWrite(leftled, LOW);
+  
+  
+  }
+
+
+  
+ 
+}
+
+void escape_block()
+{
+  digitalWrite(backled1, HIGH);
+  digitalWrite(backled2, HIGH);
+  motorReverse(110);
+  delay(50);
+   for (int i = 90; i < 170; i++) 
+  {
+  myservo.write(i); 
+  delay(1);                 
+  }
+   int right=object_distance();
+  delay(10);
+  
+  for (int i = 169; i >9 ; i--) 
+  {
+  myservo.write(i); 
+  delay(1);                 
+  }
+  delay(10);
+  int left = object_distance();
+   for (int i = 10; i < 91 ; i++) 
+  {
+  myservo.write(i); 
+  delay(1);                 
+  }
+
+Serial.print("left :");
+Serial.print(left);
+
+Serial.print("right :");
+Serial.print(right);
+digitalWrite(backled1, LOW);
+digitalWrite(backled2, LOW);
 
   if (left > right )
   {
+    
+     digitalWrite(leftled, HIGH);
     //motorReverse(200);
     //delay(50);
-   motorspinright(170);
-    delay(150);
-    motorspinleft(170);
-    delay(40);
+   motorspinleft(150);
+    delay(15);
+     digitalWrite(leftled, LOW);
+   
   }
   else if (right > left)
   {
     //motorReverse(50);
     //delay(50);
-    motorspinleft(170);
-    delay(150);
-    motorspinright(170);
-    delay(40);
+    digitalWrite(rightled, HIGH);
+    motorspinright(150);
+    delay(15);
+    digitalWrite(rightled, LOW);
+   
   }
-  else if (right =left )
-  {
-    motorReverse(250);
+ 
 
-    delay(150);
-    scanarea();
-  }
-
+ 
 }
