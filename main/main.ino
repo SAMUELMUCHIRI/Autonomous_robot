@@ -3,6 +3,7 @@ Servo myservo;
 float distance;
 int right;
 int left;
+int center;
 //rightwheels
 //A
 const int motorPin1A = 24; 
@@ -63,7 +64,7 @@ void loop() {
       
   digitalWrite(rightled, HIGH);
   digitalWrite(leftled, HIGH);
-   motorForward(155 , 155);
+   navigate();
   delay(100);
    digitalWrite(rightled, LOW);
   digitalWrite(leftled, LOW);
@@ -183,10 +184,10 @@ int object_distance()
   
 }
 
-void scanarea()
+void smallscan()
 {
   int center = object_distance();
-   for (int i = 90; i < 170; i++) 
+   for (int i = 90; i < 130; i++) 
   {
   myservo.write(i); 
   delay(1);                 
@@ -194,32 +195,23 @@ void scanarea()
    int right=object_distance();
   delay(5);
   
-  for (int i = 169; i >9 ; i--) 
+  for (int i = 129; i >49 ; i--) 
   {
   myservo.write(i); 
   delay(1);                 
   }
   delay(5);
   int left = object_distance();
-   for (int i = 10; i < 91 ; i++) 
+   for (int i = 50; i < 91 ; i++) 
   {
   myservo.write(i); 
   delay(1);                 
   }
-
-Serial.print("left :");
-Serial.print(left);
-
-Serial.print("right :");
-Serial.print(right);
-
-if ((center<=5) && (center<=5) && (center<=5))
-{
- escape_block();
-
-
 }
-else if (((center > left ) || (center == left )) && ((center > right ) || (center == right )))
+
+void navigate()
+{
+   if (((center > left ) || (center == left )) && ((center > right ) || (center == right )))
 {
   digitalWrite(rightled, HIGH);
   digitalWrite(leftled, HIGH);
@@ -246,9 +238,40 @@ else if ( (right > center ) &&  (right > left ))
   
   
   }
+}
 
-
+void scanarea()
+{
+  int center = object_distance();
+   for (int i = 90; i < 170; i++) 
+  {
+  myservo.write(i); 
+  delay(1);                 
+  }
+   int right=object_distance();
+  delay(5);
   
+  for (int i = 169; i >9 ; i--) 
+  {
+  myservo.write(i); 
+  delay(1);                 
+  }
+  delay(5);
+  int left = object_distance();
+   for (int i = 10; i < 91 ; i++) 
+  {
+  myservo.write(i); 
+  delay(1);                 
+  }
+
+if ((center<=5) && (center<=5) && (center<=5))
+{
+ escape_block();
+}
+else 
+{
+  navigate();
+}
  
 }
 
@@ -256,8 +279,8 @@ void escape_block()
 {
   digitalWrite(backled1, HIGH);
   digitalWrite(backled2, HIGH);
-  motorReverse(110);
-  delay(50);
+  motorReverse(150);
+  delay(80);
    for (int i = 90; i < 170; i++) 
   {
   myservo.write(i); 
@@ -279,11 +302,7 @@ void escape_block()
   delay(1);                 
   }
 
-Serial.print("left :");
-Serial.print(left);
-
-Serial.print("right :");
-Serial.print(right);
+ motorStop();
 digitalWrite(backled1, LOW);
 digitalWrite(backled2, LOW);
 
