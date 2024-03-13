@@ -64,9 +64,9 @@ void loop() {
       
   digitalWrite(rightled, HIGH);
   digitalWrite(leftled, HIGH);
-   navigate();
+  motorForward(155 , 155);
   delay(100);
-   digitalWrite(rightled, LOW);
+  digitalWrite(rightled, LOW);
   digitalWrite(leftled, LOW);
     }
     else if(distance<41)
@@ -211,33 +211,7 @@ void smallscan()
 
 void navigate()
 {
-   if (((center > left ) || (center == left )) && ((center > right ) || (center == right )))
-{
-  digitalWrite(rightled, HIGH);
-  digitalWrite(leftled, HIGH);
-  motorForward(155 , 155);
-  delay(100);
-  digitalWrite(rightled, LOW);
-  digitalWrite(leftled, LOW);
-}
-else if ( (right > center ) &&  (right > left ))
-{
-  digitalWrite(rightled, HIGH);
-  motorspinright(140);
-  delay(50);
-  digitalWrite(rightled, LOW);
-
-
-}
-  else if (( left > center  ) && (left > right ))
-{
-  digitalWrite(leftled, HIGH);
-  motorspinleft(140);
-  delay(50);
-  digitalWrite(leftled, LOW);
   
-  
-  }
 }
 
 void scanarea()
@@ -270,7 +244,33 @@ if ((center<=5) && (center<=5) && (center<=5))
 }
 else 
 {
-  navigate();
+   if (((center > left ) || (center == left )) && ((center > right ) || (center == right )))
+{
+  digitalWrite(rightled, HIGH);
+  digitalWrite(leftled, HIGH);
+  motorForward(155 , 155);
+  delay(100);
+  digitalWrite(rightled, LOW);
+  digitalWrite(leftled, LOW);
+}
+else if ( (right > center ) &&  (right > left ))
+{
+  digitalWrite(rightled, HIGH);
+  motorspinright(140);
+  delay(50);
+  digitalWrite(rightled, LOW);
+
+
+}
+  else if (( left > center  ) && (left > right ))
+{
+  digitalWrite(leftled, HIGH);
+  motorspinleft(140);
+  delay(50);
+  digitalWrite(leftled, LOW);
+  
+  
+  }
 }
  
 }
