@@ -245,7 +245,7 @@ void navigate()
   {
   digitalWrite(rightled, HIGH);
   digitalWrite(leftled, HIGH);
-    for(int a =100;a< 130;a++)
+    for(int a =90;a< 120;a++)
   {
     motorForward(a,a);
     delay(4);
@@ -255,8 +255,8 @@ void navigate()
   }
   else if((leftstate == 0) && (rightstate == 1))
     {
-      motorReverse(140);
-      delay(50);
+      //motorReverse(140);
+      //delay(50);
       motorspinright(130);
       delay(40);
 
@@ -264,8 +264,8 @@ void navigate()
     }
       else if((leftstate == 1) && (rightstate == 0))
     {
-      motorReverse(140);
-      delay(50);
+     // motorReverse(140);
+      //delay(50);
       motorspinleft(130);
       delay(40);
            
@@ -337,7 +337,7 @@ void escape_block()
     for(int a =130; a<170 ;a++)
   {
     motorReverse(a);
-    delay(4);
+    delay(3);
   }  
  
 
