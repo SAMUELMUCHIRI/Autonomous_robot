@@ -4,6 +4,7 @@ float distance;
 int right;
 int left;
 int center;
+char  know[10];
 //rightwheels
 //A
 const int motorPin1A = 24; 
@@ -30,6 +31,7 @@ int rightled = 48;
 int leftled = 49;
 int rightir = 10;
 int leftir = 9;
+int downir =11;
 
 void setup() {
   myservo.attach(8);
@@ -54,18 +56,23 @@ void setup() {
   pinMode(leftled, OUTPUT);
   pinMode(leftir, INPUT);
   pinMode(rightir, INPUT);
-  
+   pinMode(downir, INPUT);
   
   // Initialize serial communication
   Serial.begin(9600);
 }
 
 void loop() {
-    // Send a 10 microsecond pulse to trigger the sensor
+    know[10] = "good";
+    int movestate= digitalRead(downir);
+    // Showing target is reached or not 
+    if(movestate == 0)
+    {
+
     int distance = object_distance();
     int leftstate=digitalRead(leftir);
     int rightstate=digitalRead(rightir);
-     if ( distance >= 50)
+     if ( distance >= 45)
     {  
     if((leftstate == 1) && (rightstate == 1))
     {
@@ -96,19 +103,22 @@ void loop() {
       delay(40);
            
     }
-   
-   
-   
-   
 
     }
-    else if(distance<50)
+    else if(distance<45)
     { 
      scanarea();
     }
+    }
+    else if(movestate == 1)
+    {
+      motorStop();
+      //robot to stop if a black surface is detected
+    }
+   
   }
 
-void motorForward(int right_speed , int left_speed) 
+void motorForward(int right_speed , int left_speed ) 
 {
   digitalWrite(motorPin1A, HIGH);
   digitalWrite(motorPin2A, LOW);
@@ -127,7 +137,7 @@ void motorForward(int right_speed , int left_speed)
 
 void motorReverse(int speed) {
   
-   digitalWrite(motorPin1A, LOW);
+  digitalWrite(motorPin1A, LOW);
   digitalWrite(motorPin2A, HIGH);
   analogWrite(enablePinAA, speed);
   digitalWrite(motorPin1B, LOW);
@@ -294,6 +304,8 @@ void scanarea()
 {
     
   int center = object_distance();
+  // Turning servoo to get the distances
+  //first to the left then to the right then back at the center
    for (int i = 90; i < 170; i++) 
   {
   myservo.write(i); 
@@ -316,14 +328,15 @@ void scanarea()
   }
 
 
-if ( center<=25) 
+if ( center<=23) 
 {
+  motorStop();
+  delay(30);
  escape_block();
 }
 else 
 {
   navigate();
-
 }
  
 }
@@ -334,14 +347,13 @@ void escape_block()
   digitalWrite(backled1, HIGH);
   digitalWrite(backled2, HIGH);
   
-    for(int a =130; a<170 ;a++)
+    for(int a =150; a<190 ;a++)
   {
     motorReverse(a);
-    delay(3);
+    delay(2);
   }  
  
-
-   for (int i = 90; i < 170; i++) 
+  for (int i = 90; i < 170; i++) 
   {
   myservo.write(i); 
   delay(1);                 
@@ -354,8 +366,10 @@ void escape_block()
   myservo.write(i); 
   delay(1);                 
   }
+
   delay(10);
   int left = object_distance();
+
    for (int i = 10; i < 91 ; i++) 
   {
   myservo.write(i); 
@@ -363,8 +377,6 @@ void escape_block()
   }
 
  
-
-
   if (left > right )
   {
     
